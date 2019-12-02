@@ -60,70 +60,41 @@ def apply_largest_square(points_array):
 def check_quadrant(p1,p2,r):
     x_d = (p2[0] - p1[0])
     y_d = (p2[1] - p1[1])
+    arr = []
     # Too far
     if max(abs(x_d),abs(y_d)) > r:
-        return 0
-    # First and Second
-    if x_d > 0 and y_d == 0:
-        return [1,2]
-    # Second and Third
-    if x_d == 0 and y_d < 0:
-        return [2,3]
-    # Third and Fourth
-    if x_d < 0 and y_d == 0:
-        return [3,4]
-    # Fourth and First
-    if x_d == 0 and y_d > 0:
-        return [4,1]
+        return []
+
+    if x_d == 0 and y_d == 0:
+        return []
 
     # First quadrant
-    elif x_d > 0 and y_d > 0:
-        return 1
+    if x_d >= 0 and y_d >= 0:
+        arr.append(1)
     # Second
-    elif x_d > 0 and y_d < 0:
-        return 2
+    if x_d >= 0 and y_d <= 0:
+        arr.append(2)
     # Third
-    elif x_d < 0 and y_d < 0:
-        return 3
+    if x_d <= 0 and y_d <= 0:
+        arr.append(3)
     # Fourth
-    elif x_d < 0 and y_d > 0:
-        return 4
+    if x_d <= 0 and y_d >= 0:
+        arr.append(4)
+    return arr
 
-def get_possible_squares(points_array,center_point,r):
-        q1 = []
-        q2 = []
-        q3 = []
-        q4 = []
-        for neighbour_point in points_array:
-            if center_point == neighbour_point:
-                continue
-            q = check_quadrant(center_point,neighbour_point,r)
-            if q == 0:
-                continue
-            elif q == [1,2]:
-                q1.append(neighbour_point)
-                q2.append(neighbour_point)
-            elif q == [2,3]:
-                q2.append(neighbour_point)
-                q3.append(neighbour_point)
-            elif q == [3,4]:
-                q3.append(neighbour_point)
-                q4.append(neighbour_point)
-            elif q == [4,1]:
-                q4.append(neighbour_point)
-                q1.append(neighbour_point)
-
-            elif q == 1:
-                q1.append(neighbour_point)
-            elif q == 2:
-                q2.append(neighbour_point)
-            elif q == 3:
-                q3.append(neighbour_point)
-            elif q == 4:
-                q4.append(neighbour_point)
-
-        return q1, q2, q3, q4
-
+def get_square(points_array,center_point,r,quadrant):
+    square = [center_point]
+    for neighbour_point in points_array:
+        if neighbour_point == center_point:
+            continue
+        # Append all points in the desired quadrant
+        q = check_quadrant(center_point,neighbour_point,r)
+        ##print(center_point,neighbour_point,q)
+        if quadrant in q:
+            square.append(neighbour_point)
+            ##print("APPENDED")
+    #print("Candidate square length: {}".format(len(square)))
+    return square
 def get_radius_array(points_array):
     radius_array = []
     for i in points_array:
